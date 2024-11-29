@@ -1,13 +1,16 @@
 import Header from "./components/header";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <Header/>
-    </div>
+    <Router>
+      <div className="container mt-4">
+      <Header />
+      </div>
+    </Router>
   );
-}
+};
 
 export default App;
