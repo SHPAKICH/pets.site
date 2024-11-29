@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Modal, Button, Form } from 'react-bootstrap';
 import logo from '../media/logo.jpg';
+import key from '../media/key.svg';
+import emojiSmile from '../media/emoji-smile.svg';
+
 
 const Header = () => {
   const [show, setShow] = useState(false);
+  const location = useLocation(); // Получаем текущий путь
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  // Функция для определения активной страницы
+  const isActive = (path) => location.pathname === path;
 
   return (
     <header>
@@ -30,27 +37,43 @@ const Header = () => {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <Link className="nav-link disabled" to="/" aria-current="page">
+                <Link
+                  className={`nav-link ${isActive('/') ? 'disabled' : ''}`}
+                  to="/"
+                  aria-current="page"
+                >
                   Главная
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link active" to="/myaccount">
+                <Link
+                  className={`nav-link ${isActive('/myaccount') ? 'disabled' : ''}`}
+                  to="/myaccount"
+                >
                   Личный кабинет
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link active" to="/registration">
+                <Link
+                  className={`nav-link ${isActive('/registration') ? 'disabled' : ''}`}
+                  to="/registration"
+                >
                   Регистрация
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link active" to="/add-pet">
+                <Link
+                  className={`nav-link ${isActive('/add-pet') ? 'disabled' : ''}`}
+                  to="/add-pet"
+                >
                   Добавить объявление
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link active" to="/pet-search">
+                <Link
+                  className={`nav-link ${isActive('/pet-search') ? 'disabled' : ''}`}
+                  to="/pet-search"
+                >
                   Поиск по объявлениям
                 </Link>
               </li>
@@ -84,7 +107,7 @@ const Header = () => {
               <Form.Label>Электронная почта</Form.Label>
               <div className="input-group">
                 <span className="input-group-text" id="basic-addon1">
-                  <img src="media/emoji-smile.svg" alt="Эмодзи" style={{ width: '20px' }} />
+                  <img src={emojiSmile} alt="Эмодзи" style={{ width: '20px' }} />
                 </span>
                 <Form.Control type="email" placeholder="Введите email" />
               </div>
@@ -93,7 +116,7 @@ const Header = () => {
               <Form.Label>Пароль</Form.Label>
               <div className="input-group">
                 <span className="input-group-text" id="basic-addon2">
-                  <img src="media/key.svg" alt="Ключ" style={{ width: '20px' }} />
+                  <img src={key} alt="Ключ" style={{ width: '20px' }} />
                 </span>
                 <Form.Control type="password" placeholder="Введите пароль" />
               </div>
