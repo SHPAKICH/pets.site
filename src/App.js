@@ -6,7 +6,7 @@ import PetSearch from "./pages/animalSearch"
 import AnimalAdd from "./pages/animalAdd";
 import { BrowserRouter as Router, Routes, Route, useParams } from 'react-router-dom';
 import RegistrationPage from "./pages/registrationPage";
-import PetDetailPage from '../pages/petDetailPage';
+import PetDetailPage from './pages/petDetailPage';
 
 
 const App = () => {
