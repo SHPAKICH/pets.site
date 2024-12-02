@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { Link } from 'react-router-dom';
 const AnimalCard = ({ image, title, district, description, date, link }) => {
     return (
         <div className="col">
@@ -10,7 +10,9 @@ const AnimalCard = ({ image, title, district, description, date, link }) => {
                     <p className="card-text">Район: {district}</p>
                     <p className="card-text">Описание: {description}</p>
                     <p className="card-text"><small>Дата: {date}</small></p>
-                    <a href={link} className="btn btn-outline-primary">Подробнее</a>
+                    <Link className="btn btn-outline-success" to="/pet/CA-010-SPB">
+                    Подробнее
+                    </Link>
                 </div>
             </div>
         </div>
