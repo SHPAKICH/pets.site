@@ -10,28 +10,48 @@ const RegistrationForm = () => {
         confirm: false,
     });
 
-    const [errors, setErrors] = useState('');
+    const [errors, setErrors] = useState({});
+
+    const validate = () => {
+        const errors = {};
+        const nameRegex = /^[A-Za-zА-Яа-яЁё\s]+$/;
+        const phoneRegex = /^\+7\d{10}$/;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
+        if (!formData.name.trim() || formData.name.length < 2 || !nameRegex.test(formData.name)) {
+            errors.name = 'Имя должно содержать только буквы и быть не короче 2 символов.';
+        }
+        if (!formData.phone || !phoneRegex.test(formData.phone)) {
+            errors.phone = 'Телефон должен быть в формате +7XXXXXXXXXX.';
+        }
+        if (!formData.email || !emailRegex.test(formData.email)) {
+            errors.email = 'Введите корректный email.';
+        }
+        if (!formData.password || !passwordRegex.test(formData.password)) {
+            errors.password = 'Пароль должен быть не менее 8 символов, содержать буквы и цифры.';
+        }
+        if (formData.password !== formData.passwordConfirmation) {
+            errors.passwordConfirmation = 'Пароли не совпадают.';
+        }
+        if (!formData.confirm) {
+            errors.confirm = 'Необходимо согласие на обработку данных.';
+        }
+
+        return errors;
+    };
 
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        // Проверка на ошибки
-        let formErrors = '';
-        if (formData.password !== formData.passwordConfirmation) {
-            formErrors = 'Пароли не совпадают';
+        const validationErrors = validate();
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+        } else {
+            setErrors({});
+            console.log('Форма отправлена:', formData);
+            // Здесь можно отправить данные на сервер
         }
-
-        if (!formData.confirm) {
-            formErrors = 'Необходимо согласие на обработку данных';
-        }
-
-        if (formErrors) {
-            setErrors(formErrors);
-            return;
-        }
-
-        // Здесь отправка данных
-        console.log('Форма отправлена:', formData);
     };
 
     const handleChange = (event) => {
@@ -64,8 +84,8 @@ const RegistrationForm = () => {
                         value={formData.name}
                         onChange={handleChange}
                         placeholder="Введите имя"
-                        required
                     />
+                    {errors.name && <div className="text-danger">{errors.name}</div>}
                 </div>
 
                 {/* Телефон */}
@@ -81,8 +101,8 @@ const RegistrationForm = () => {
                         value={formData.phone}
                         onChange={handleChange}
                         placeholder="+7XXXXXXXXXX"
-                        required
                     />
+                    {errors.phone && <div className="text-danger">{errors.phone}</div>}
                 </div>
 
                 {/* Email */}
@@ -98,8 +118,8 @@ const RegistrationForm = () => {
                         value={formData.email}
                         onChange={handleChange}
                         placeholder="example@example.com"
-                        required
                     />
+                    {errors.email && <div className="text-danger">{errors.email}</div>}
                 </div>
 
                 {/* Пароль */}
@@ -115,8 +135,8 @@ const RegistrationForm = () => {
                         value={formData.password}
                         onChange={handleChange}
                         placeholder="Введите пароль"
-                        required
                     />
+                    {errors.password && <div className="text-danger">{errors.password}</div>}
                 </div>
 
                 {/* Подтверждение пароля */}
@@ -132,8 +152,10 @@ const RegistrationForm = () => {
                         value={formData.passwordConfirmation}
                         onChange={handleChange}
                         placeholder="Повторите пароль"
-                        required
                     />
+                    {errors.passwordConfirmation && (
+                        <div className="text-danger">{errors.passwordConfirmation}</div>
+                    )}
                 </div>
 
                 {/* Согласие */}
@@ -146,15 +168,12 @@ const RegistrationForm = () => {
                         name="confirm"
                         checked={formData.confirm}
                         onChange={handleChange}
-                        required
                     />
                     <label className="form-check-label" htmlFor="confirm">
                         Согласен на обработку персональных данных
                     </label>
+                    {errors.confirm && <div className="text-danger">{errors.confirm}</div>}
                 </div>
-
-                {/* Ошибки */}
-                {errors && <div id="errors" className="text-danger mb-3">{errors}</div>}
 
                 {/* Кнопка отправки */}
                 <button type="submit" className="btn btn-primary w-100">
