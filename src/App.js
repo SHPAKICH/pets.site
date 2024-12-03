@@ -4,9 +4,10 @@ import MainPage from "./pages/mainPage"
 import MyAccount from "./pages/myAccount"
 import PetSearch from "./pages/animalSearch"
 import AnimalAdd from "./pages/animalAdd";
-import { BrowserRouter as Router, Routes, Route, useParams } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import RegistrationPage from "./pages/registrationPage";
 import PetDetailPage from './pages/petDetailPage';
+
 
 
 const App = () => {
@@ -15,12 +16,12 @@ const App = () => {
       <Header />
       <div className="container mt-4">
       <Routes>
-        <Route path={'/'} element={<MainPage />}/>
+        <Route path={'/'} element={<MainPage/>}/>
         <Route path={'/registration'} element={<RegistrationPage/>}/>
         <Route path={'/myaccount'} element={<MyAccount/>}/>
         <Route path={'/add-pet'} element={<AnimalAdd/>}/>
         <Route path={'/pet-search'} element={<PetSearch/>}/>
-        <Route path={'/pet/:chipNumber'} element={<PetDetailPage/>}/>
+        <Route path={'/pet/:chip'} element={<PetDetailPage/>}/>
       </Routes>
       </div>
       <Footer />

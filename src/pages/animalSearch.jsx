@@ -1,12 +1,12 @@
 import AnimalSearchForm from "../components/animalSearchForm";
-import AnimalList from "../components/animalList";
+import LostAnimalscards from "../components/lostAnimalscards";
 import React from 'react';
 
 const AnimalSearch = () => {
     return (
         <div>
         <AnimalSearchForm/>
-        <AnimalList/>
+        <LostAnimalscards/>
         </div>
     );
 };
