@@ -5,6 +5,7 @@ import React from 'react';
 import catImage from '../media/кошка.jpg';
 import goatImage from '../media/коза.jpg';
 import mouseImage from '../media/мышь.jpg';
+import dogImage from '../media/собака.jpg';
 
 const slidesData = [
   {
@@ -20,6 +21,11 @@ const slidesData = [
   {
     image: mouseImage,
     alt: 'Мышь',
+    caption: 'Найден хозяин!',
+  },
+  {
+    image: dogImage,
+    alt: 'Собака',
     caption: 'Найден хозяин!',
   },
 ];
