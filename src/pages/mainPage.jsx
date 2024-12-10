@@ -1,5 +1,5 @@
 import PhotoCarousel from "../components/photoCarousel";
-import LostAnimalsCard from "../components/lostAnimalscards";
+import FoundAnimalsCard from "../components/foundAnimalCards";
 import SubForm from "../components/subscriptionForm";
 import React from 'react';
 import catImage from '../media/кошка.jpg';
@@ -35,7 +35,7 @@ const MainPage = () => {
     return (
         <div>
         <PhotoCarousel  slides={slidesData}/>
-        <LostAnimalsCard/>
+        <FoundAnimalsCard/>
         <SubForm/>
         </div>
     );

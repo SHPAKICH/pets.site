@@ -1,22 +1,19 @@
 import { Link } from 'react-router-dom';
 
-function Card(props) {
+function Card({data}) {
   return (
     <div className="col-md-4 mb-4">
-      <div className="card" style={{ width: '100%' }}>
-        <img
-          src={props.data.img}
-          className="card-img-top"
-          style={{ width: '100%', height: '300px', objectFit: 'cover' }}
-          alt={props.data.type}
-        />
+      <div className="card">
+        <img src={`https://pets.сделай.site${data.photos}`} className="card-img-top" alt={data.description} style={{ width: '100%', height: '300px', objectFit: 'cover' }}/>
         <div className="card-body">
-          <p className="card-text">Вид животного: {props.data.type}</p>
-          <p className="card-text">Район: {props.data.district}</p>
-          <p className="card-text">Дата: {props.data.date}</p>
-          <Link className="btn btn-outline-success" to={`/pet/${props.data.chip}`}>
-            Подробнее
-          </Link>
+          <h5 className="card-title">{data.kind} ({data.mark})</h5>
+          <p className="card-text">{data.description}</p>
+          <p className="card-text">
+            <small className="text-muted">Дата: {new Date(data.date).toLocaleDateString()}</small>
+          </p>
+          <p className="card-text">
+            <small className="text-muted">Район: {data.district}</small>
+          </p>
         </div>
       </div>
     </div>

@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 
-const AnimalSearchForm = () => {
+const AnimalSearchForm = ({ onSearch }) => {
     const [district, setDistrict] = useState('');
     const [kind, setKind] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Обработка данных формы, например, отправка на сервер
-        console.log(`Ищем животных в районе: ${district}, Вид животного: ${kind}`);
+        if (!district && !kind) {
+            alert('Укажите хотя бы один параметр для поиска!');
+            return;
+        }
+        onSearch({ district, kind });
     };
 
     return (

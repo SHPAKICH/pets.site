@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import AuthModal from '../components/authModal';
@@ -6,12 +6,57 @@ import logo from '../media/logo.jpg';
 
 const Header = () => {
   const [show, setShow] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
+  const [loading, setLoading] = useState(false);
   const location = useLocation();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const isActive = (path) => location.pathname === path;
+
+  // Функция debounce
+  const debounce = (func, delay) => {
+    let timeout;
+    return (...args) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func(...args), delay);
+    };
+  };
+
+  // Функция поиска
+  const searchAnimals = useCallback(
+    debounce(async (query) => {
+      if (query.length < 3) {
+        setSuggestions([]);
+        return;
+      }
+      setLoading(true);
+      try {
+        const response = await fetch(`https://pets.сделай.site/api/search?query=${query}`);
+        if (response.status === 200) {
+          const result = await response.json();
+          setSuggestions(result.data.orders || []);
+        } else {
+          setSuggestions([]);
+        }
+      } catch (error) {
+        console.error('Ошибка поиска:', error);
+        setSuggestions([]);
+      } finally {
+        setLoading(false);
+      }
+    }, 1000),
+    []
+  );
+
+  // Отслеживание изменения поискового запроса
+  useEffect(() => {
+    if (searchQuery) {
+      searchAnimals(searchQuery);
+    }
+  }, [searchQuery, searchAnimals]);
 
   return (
     <header>
@@ -59,9 +104,38 @@ const Header = () => {
                 </Link>
               </li>
             </ul>
-            <Button variant="primary" onClick={handleShow}>
-              Авторизация
-            </Button>
+            <div className="d-flex align-items-center">
+              {/* Поле ввода для поиска */}
+              <div className="position-relative me-3">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Быстрый поиск..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                {searchQuery.length >= 3 && (
+                  <div className="position-absolute bg-white border mt-1 p-2 w-100">
+                    {loading ? (
+                      <div>Загрузка...</div>
+                    ) : suggestions.length > 0 ? (
+                      suggestions.map((item) => (
+                        <div key={item.id} className="py-1">
+                          <Link to={`/pet/${item.id}`} className="text-decoration-none">
+                            {item.description} ({item.kind})
+                          </Link>
+                        </div>
+                      ))
+                    ) : (
+                      <div>Нет результатов</div>
+                    )}
+                  </div>
+                )}
+              </div>
+              <Button variant="primary" onClick={handleShow}>
+                Авторизация
+              </Button>
+            </div>
           </div>
         </div>
       </nav>
