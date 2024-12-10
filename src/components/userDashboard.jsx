@@ -29,8 +29,9 @@ const UserDashboard = () => {
                     'Authorization': `Bearer ${token}`,
                 },
             });
-            const data = await response.json();
-
+            if (response.ok) {
+                const data = await response.json();
+                setUser(data);Ъ}
             if (response.status === 200) {
                 const daysSinceRegistration = calculateDaysSinceRegistration(data.user.registrationDate);
                 setUserData({

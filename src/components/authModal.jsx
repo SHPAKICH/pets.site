@@ -49,8 +49,11 @@ const AuthModal = ({ show, handleClose }) => {
       if (response.ok) {
         const data = await response.json();
         setServerMessage('Успешная авторизация!');
-        console.log('Token:', data?.data?.token); 
-        localStorage.getItem('token');
+        const token = data?.data?.token;
+        if (token) {
+            localStorage.setItem('token', token);
+            console.log('Token saved:', token);
+        }
         handleClose();
       } else if (response.status === 422) {
         const errorData = await response.json();
