@@ -13,9 +13,9 @@ const AddPetForm = () => {
     passwordConfirmation: '',
     mark: '',
     description: '',
-    photo1: null,
-    photo2: null,
-    photo3: null,
+    photos1: null,
+    photos2: null,
+    photos3: null,
     confirm: false,
   });
   const [errorMessage, setErrorMessage] = useState('');
@@ -35,59 +35,79 @@ const AddPetForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Basic validation before submission
-    if (!formData.name || !formData.phone || !formData.email || !formData.photo1 || !formData.confirm) {
+  
+    // Базовая валидация перед отправкой
+    if (!formData.name || !formData.phone || !formData.email || !formData.photos1 || !formData.confirm) {
       setErrorMessage('Пожалуйста, заполните все обязательные поля.');
       return;
     }
-
+  
+    // Проверка на наличие хотя бы одного фото
+    if (!formData.photos1 || formData.photos1.length === 0) {
+      setErrorMessage('Пожалуйста, добавьте хотя бы одно изображение.');
+      return;
+    }
+  
+    // Проверка на совпадение паролей, если регистрация включена
     if (isRegistered && formData.password !== formData.passwordConfirmation) {
       setErrorMessage('Пароли не совпадают.');
       return;
     }
-
-    // Create a FormData object to send the data as multipart/form-data
+  
+    // Создаем объект FormData для отправки данных в формате multipart/form-data
     const form = new FormData();
     form.append('name', formData.name);
     form.append('phone', formData.phone);
     form.append('email', formData.email);
     form.append('district', formData.district);
     form.append('kind', formData.kind);
-    form.append('password', formData.password);
-    form.append('password_confirmation', formData.passwordConfirmation);
+
+    if (isRegistered){
+      form.append('password', formData.password);
+      form.append('password_confirmation', formData.passwordConfirmation);
+    } 
+
     form.append('confirm', formData.confirm ? 1 : 0);
     form.append('mark', formData.mark);
     form.append('description', formData.description);
-    form.append('photo1', formData.photo1[0]);
-    form.append('photo2', formData.photo2[0]);
-    form.append('photo3', formData.photo3[0]);
-
+  
+    // Добавляем файлы, только если они существуют
+    if (formData.photos1 && formData.photos1.length > 0) {
+      form.append('photos1', formData.photos1[0]);
+    }
+    if (formData.photos2 && formData.photos2.length > 0) {
+      form.append('photos2', formData.photos2[0]);
+    }
+    if (formData.photos3 && formData.photos3.length > 0) {
+      form.append('photos3', formData.photos3[0]);
+    }
+  
     try {
-      // Send the request to the API
+      // Отправляем запрос на API
       const response = await fetch('https://pets.сделай.site/api/pets', {
         method: 'POST',
         body: form, 
       });
-
-      // Parse the JSON response
+  
+      // Парсим JSON-ответ
       const data = await response.json();
-      console.log(response)
+      console.log(response);
       if (response.status === 200) {
-        // Success: Show a success message
+        // Успех: показываем сообщение об успешной отправке
         setSuccessMessage('Объявление успешно добавлено!');
         setErrorMessage('');
       } else {
-        // Error: Show error messages from validation
+        // Ошибка: показываем сообщения об ошибках валидации
         setErrorMessage(data.error.errors);
         setSuccessMessage('');
       }
     } catch (error) {
-      // Handle any network or other errors
+      // Обработка ошибок сети или других ошибок
       setErrorMessage('Произошла ошибка при отправке данных.');
       setSuccessMessage('');
     }
   };
+  
 
   return (
     <main className="container mt-4">
@@ -153,7 +173,7 @@ const AddPetForm = () => {
           />
         </div>
 
-        {/* District */}
+        {/* Kind */}
         <div className="mb-3">
           <label htmlFor="kind" className="form-label">Вид животного</label>
           <input
@@ -174,7 +194,7 @@ const AddPetForm = () => {
             className="form-select"
             id="register"
             name="register"
-            value={formData.register}
+            value={isRegistered ? '1' : '0'}
             onChange={handleRegisterChange}
             required
           >
@@ -217,34 +237,34 @@ const AddPetForm = () => {
 
         {/* Photos */}
         <div className="mb-3">
-          <label htmlFor="photo1" className="form-label">Фото 1 (обязательно)</label>
+          <label htmlFor="photos1" className="form-label">Фото 1 (обязательно)</label>
           <input
             type="file"
             className="form-control"
-            id="photo1"
-            name="photo1"
+            id="photos1"
+            name="photos1"
             onChange={handleInputChange}
             required
           />
           <div className="invalid-feedback">Добавьте хотя бы одно изображение.</div>
         </div>
         <div className="mb-3">
-          <label htmlFor="photo2" className="form-label">Фото 2</label>
+          <label htmlFor="photos2" className="form-label">Фото 2</label>
           <input
             type="file"
             className="form-control"
-            id="photo2"
-            name="photo2"
+            id="photos2"
+            name="photos2"
             onChange={handleInputChange}
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="photo3" className="form-label">Фото 3</label>
+          <label htmlFor="photos3" className="form-label">Фото 3</label>
           <input
             type="file"
             className="form-control"
-            id="photo3"
-            name="photo3"
+            id="photos3"
+            name="photos3"
             onChange={handleInputChange}
           />
         </div>
