@@ -1,30 +1,28 @@
 import React, { useEffect, useState } from 'react';
 
 const MyAds = ({ userId }) => {
-    const [ads, setAds] = useState([]);
+    const [ads, setAds] = useState(null);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchAds = async () => {
-            const token = localStorage.getItem('token');
             try {
-                const response = await fetch(`https://pets.сделай.site/api/users/orders/${userId}`, {
-                    method: 'GET',
+                const response = await fetch(`https://pets.сделай.site/api/users/orders`, {
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
+                        'Authorization': `Bearer ${localStorage.token}`,
                     },
                 });
                 const data = await response.json();
-
+                console.log(data);
                 if (response.status === 200) {
-                    setAds(data.orders);
+                    setAds(data.data.orders);
                 } else {
                     setError(data.error.message || 'Ошибка при загрузке объявлений.');
                 }
             } catch (error) {
                 setError('Произошла ошибка при подключении к серверу.');
+                console.log(error);
             } finally {
                 setLoading(false);
             }
@@ -42,10 +40,10 @@ const MyAds = ({ userId }) => {
             <h2>Мои объявления</h2>
             {error && <div className="alert alert-danger">{error}</div>}
             <div className="row row-cols-1 row-cols-md-2 g-4">
-                {ads.length === 0 ? (
+                {ads?.length === 0 ? (
                     <div className="alert alert-info">У вас нет добавленных объявлений.</div>
                 ) : (
-                    ads.map((ad) => (
+                    ads?.map((ad) => (
                         <div className="col" key={ad.id}>
                             <div className="card">
                                 <div className="card-body">
@@ -54,12 +52,10 @@ const MyAds = ({ userId }) => {
                                     <p className="card-text">
                                         <small>Статус: {ad.status}</small>
                                     </p>
-                                    {ad.status === 'active' && (
-                                        <>
-                                            <button className="btn btn-secondary">Редактировать</button>
+
+                                            <button className="btn btn-secondary m-2">Редактировать</button>
                                             <button className="btn btn-danger">Удалить</button>
-                                        </>
-                                    )}
+
                                 </div>
                             </div>
                         </div>
@@ -69,5 +65,5 @@ const MyAds = ({ userId }) => {
         </section>
     );
 };
-
+//
 export default MyAds;

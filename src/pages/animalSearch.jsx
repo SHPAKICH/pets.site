@@ -1,6 +1,6 @@
+import React, { useState } from 'react';
 import AnimalSearchForm from "../components/animalSearchForm";
 import LostAnimalscards from "../components/lostAnimalscards";
-import React, { useState } from 'react';
 
 const AnimalSearch = () => {
     const [searchParams, setSearchParams] = useState({});

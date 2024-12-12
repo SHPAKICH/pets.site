@@ -6,6 +6,8 @@ const AddPetForm = () => {
     name: '',
     phone: '',
     email: '',
+    district: '',
+    kind: '',
     register: '0',
     password: '',
     passwordConfirmation: '',
@@ -16,6 +18,8 @@ const AddPetForm = () => {
     photo3: null,
     confirm: false,
   });
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value, type, checked, files } = e.target;
@@ -29,28 +33,67 @@ const AddPetForm = () => {
     setIsRegistered(e.target.value === '1');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Basic validation before submission
     if (!formData.name || !formData.phone || !formData.email || !formData.photo1 || !formData.confirm) {
-      alert('Пожалуйста, заполните все обязательные поля.');
+      setErrorMessage('Пожалуйста, заполните все обязательные поля.');
       return;
     }
 
     if (isRegistered && formData.password !== formData.passwordConfirmation) {
-      alert('Пароли не совпадают.');
+      setErrorMessage('Пароли не совпадают.');
       return;
     }
 
-    // Обработка отправки данных
-    console.log('Form submitted with:', formData);
+    // Create a FormData object to send the data as multipart/form-data
+    const form = new FormData();
+    form.append('name', formData.name);
+    form.append('phone', formData.phone);
+    form.append('email', formData.email);
+    form.append('district', formData.district);
+    form.append('kind', formData.kind);
+    form.append('password', formData.password);
+    form.append('password_confirmation', formData.passwordConfirmation);
+    form.append('confirm', formData.confirm ? 1 : 0);
+    form.append('mark', formData.mark);
+    form.append('description', formData.description);
+    form.append('photo1', formData.photo1[0]);
+    form.append('photo2', formData.photo2[0]);
+    form.append('photo3', formData.photo3[0]);
+
+    try {
+      // Send the request to the API
+      const response = await fetch('https://pets.сделай.site/api/pets', {
+        method: 'POST',
+        body: form, 
+      });
+
+      // Parse the JSON response
+      const data = await response.json();
+      console.log(response)
+      if (response.status === 200) {
+        // Success: Show a success message
+        setSuccessMessage('Объявление успешно добавлено!');
+        setErrorMessage('');
+      } else {
+        // Error: Show error messages from validation
+        setErrorMessage(data.error.errors);
+        setSuccessMessage('');
+      }
+    } catch (error) {
+      // Handle any network or other errors
+      setErrorMessage('Произошла ошибка при отправке данных.');
+      setSuccessMessage('');
+    }
   };
 
   return (
     <main className="container mt-4">
       <h1>Добавление нового объявления</h1>
       <form id="addPetForm" className="needs-validation" onSubmit={handleSubmit} noValidate>
-        {/* Имя */}
+        {/* User Name */}
         <div className="mb-3">
           <label htmlFor="name" className="form-label">Имя пользователя</label>
           <input
@@ -66,7 +109,7 @@ const AddPetForm = () => {
           <div className="invalid-feedback">Введите корректное имя (только кириллица, пробелы, дефисы).</div>
         </div>
 
-        {/* Телефон */}
+        {/* Phone */}
         <div className="mb-3">
           <label htmlFor="phone" className="form-label">Телефон</label>
           <input
@@ -74,7 +117,6 @@ const AddPetForm = () => {
             className="form-control"
             id="phone"
             name="phone"
-            pattern="^\+?\d+$"
             value={formData.phone}
             onChange={handleInputChange}
             required
@@ -97,7 +139,35 @@ const AddPetForm = () => {
           <div className="invalid-feedback">Введите корректный адрес электронной почты.</div>
         </div>
 
-        {/* Регистрация */}
+        {/* District */}
+        <div className="mb-3">
+          <label htmlFor="district" className="form-label">Район</label>
+          <input
+            type="district"
+            className="form-control"
+            id="district"
+            name="district"
+            value={formData.district}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+
+        {/* District */}
+        <div className="mb-3">
+          <label htmlFor="kind" className="form-label">Вид животного</label>
+          <input
+            type="kind"
+            className="form-control"
+            id="kind"
+            name="kind"
+            value={formData.kind}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+
+        {/* Register Option */}
         <div className="mb-3">
           <label htmlFor="register" className="form-label">Автоматическая регистрация</label>
           <select
@@ -113,7 +183,7 @@ const AddPetForm = () => {
           </select>
         </div>
 
-        {/* Поля пароля */}
+        {/* Password Fields */}
         {isRegistered && (
           <div id="passwordFields">
             <div className="mb-3">
@@ -145,7 +215,7 @@ const AddPetForm = () => {
           </div>
         )}
 
-        {/* Фото */}
+        {/* Photos */}
         <div className="mb-3">
           <label htmlFor="photo1" className="form-label">Фото 1 (обязательно)</label>
           <input
@@ -179,7 +249,7 @@ const AddPetForm = () => {
           />
         </div>
 
-        {/* Клеймо */}
+        {/* Mark */}
         <div className="mb-3">
           <label htmlFor="mark" className="form-label">Клеймо</label>
           <input
@@ -192,7 +262,7 @@ const AddPetForm = () => {
           />
         </div>
 
-        {/* Описание */}
+        {/* Description */}
         <div className="mb-3">
           <label htmlFor="description" className="form-label">Описание</label>
           <textarea
@@ -205,7 +275,7 @@ const AddPetForm = () => {
           ></textarea>
         </div>
 
-        {/* Подтверждение */}
+        {/* Confirm */}
         <div className="mb-3 form-check">
           <input
             className="form-check-input"
@@ -222,6 +292,10 @@ const AddPetForm = () => {
           </label>
           <div className="invalid-feedback">Необходимо согласиться на обработку данных.</div>
         </div>
+
+        {/* Error or Success Messages */}
+        {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
+        {successMessage && <div className="alert alert-success">{successMessage}</div>}
 
         <button type="submit" className="btn btn-primary">Добавить объявление</button>
       </form>

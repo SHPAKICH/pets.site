@@ -10,38 +10,29 @@ const FoundAnimalsCards = ({ searchParams }) => {
     const [error, setError] = useState(null);
 
     const fetchAnimals = async (page) => {
-        setLoading(true);
-        setError(null);
         const { district, kind } = searchParams;
-        const query = new URLSearchParams({ district, kind }).toString();
+    
+        // Формируем URL с параметрами
 
-        
         try {
-            
-            console.log(query);
-            console.log(district);
-            console.log(kind);
-            const response = await fetch(`https://pets.xn--80ahdri7a.site/api/search/order/?${query}`,{mode: 'no-cors'});
-            console.log(response.status);
-            if (response.status === 200) {
+            const response = await fetch(`https://pets.сделай.site/api/search/order?district=${district}&kind=${kind}`);
+    
+            if (response.ok) {
                 const result = await response.json();
-                const orders = result.data.orders;
-
-                setAnimals(orders);
-                setTotalPages(Math.ceil(orders.length / 10)); // Предположим, что сервер возвращает все результаты, а мы делаем пагинацию на клиенте.
+                console.log('Данные:', result);
+                setAnimals(result.data.orders);
+                setTotalPages(Math.ceil(result.data.orders.length / 10));
             } else if (response.status === 204) {
                 setAnimals([]);
-                setTotalPages(1);
             } else {
                 throw new Error(`Ошибка: ${response.status}`);
             }
         } catch (err) {
-            setError('Не удалось загрузить данные. Попробуйте позже.');
-            setAnimals([]);
-        } finally {
-            setLoading(false);
+            console.error(err);
+            setError('Не удалось загрузить данные.');
         }
     };
+    
 
     useEffect(() => {
         fetchAnimals(currentPage);

@@ -6,7 +6,7 @@ const Card = ({ data }) => {
     return (
         <div className="col-md-4 mb-4">
             <div className="card">
-                <img src={photos} className="card-img-top" alt={`${kind}`} />
+                <img src={`https://pets.сделай.site${photos}`} className="card-img-top" alt={`${kind}`} />
                 <div className="card-body">
                     <h5 className="card-title">{kind}</h5>
                     <p className="card-text">

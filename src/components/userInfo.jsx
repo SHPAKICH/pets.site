@@ -17,5 +17,5 @@ const UserInfo = ({ data }) => {
         </main>
     );
 };
-
+//
 export default UserInfo;
