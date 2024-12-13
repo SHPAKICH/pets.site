@@ -51,10 +51,12 @@ const AuthModal = ({ show, handleClose }) => {
         setServerMessage('Успешная авторизация!');
         const token = data?.data?.token;
         if (token) {
-            localStorage.setItem('token', token);
-            console.log('Token saved:', token);
+          localStorage.setItem('token', token);
+          console.log('Token saved:', token);
+          handleClose();
+          // Обновляем страницу для обновления состояния аутентификации
+          window.location.reload();
         }
-        handleClose();
       } else if (response.status === 422) {
         const errorData = await response.json();
         setErrors(errorData.error?.errors || {});
