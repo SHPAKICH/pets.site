@@ -12,6 +12,7 @@ import PetDetailPage from './pages/petDetailPage';
 
 const App = () => {
   return (
+    
     <Router>
       <Header />
       <div className="container mt-4">
@@ -21,7 +22,7 @@ const App = () => {
         <Route path={'/myaccount'} element={<MyAccount/>}/>
         <Route path={'/add-pet'} element={<AnimalAdd/>}/>
         <Route path={'/pet-search'} element={<PetSearch/>}/>
-        <Route path={'/pet/:chip'} element={<PetDetailPage/>}/>
+        <Route path={'/pet/:id'} element={<PetDetailPage/>}/>
       </Routes>
       </div>
       <Footer />
