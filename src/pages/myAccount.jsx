@@ -1,4 +1,4 @@
-import UserInfo from "../components/userInfo";
+
 import MyAds from "../components/myAds";
 import React from 'react';
 import UserDashboard from "../components/userDashboard";
