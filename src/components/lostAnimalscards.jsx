@@ -9,7 +9,7 @@ const FoundAnimalsCards = ({ searchParams }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const fetchAnimals = async (page) => 
+    const fetchAnimals = async (page) => {
         const { district, kind } = searchParams;
     
         // Формируем URL с параметрами
